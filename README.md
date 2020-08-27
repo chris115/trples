@@ -4,7 +4,7 @@ Example application for flask tutorial "[Flask 入门教程](http://helloflask.c
 
 Demo: http://watchlist.helloflask.com
 
-![Screenshot](http://helloflask.com/screenshots/watchlist.png)
+![Screenshot](https://github.com/chris115/trples/blob/master/index%20picture.png)
 
 ## Installation
 
