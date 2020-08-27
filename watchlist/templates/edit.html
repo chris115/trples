@@ -3,9 +3,9 @@
 {% block content %}
 <h3>Edit item</h3>
 <form method="post">
-    Entity <input type="text" name="entity" autocomplete="off" required value="{{ movie.entity }}">
-    Relation <input type="text" name="relation" autocomplete="off" required value="{{ movie.relation }}">
-    Attribute <input type="text" name="attribute" autocomplete="off" required value="{{ movie.attribute }}">
+    Entity <input type="text" name="entity" autocomplete="off" required value="{{ triple.entity }}">
+    Relation <input type="text" name="relation" autocomplete="off" required value="{{ triple.relation }}">
+    Attribute <input type="text" name="attribute" autocomplete="off" required value="{{ triple.attribute }}">
     <input class="btn" type="submit" name="submit" value="Update">
 </form>
 {% endblock %}

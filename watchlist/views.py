@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
 
 from watchlist import app, db
-from watchlist.models import User, Movie
+from watchlist.models import User, Triple
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -20,20 +20,20 @@ def index():
             flash('Invalid input.')
             return redirect(url_for('index'))
 
-        movie = Movie(entity=entity, relation=relation, attribute=attribute)
-        db.session.add(movie)
+        triple = Triple(entity=entity, relation=relation, attribute=attribute)
+        db.session.add(triple)
         db.session.commit()
         flash('Item created.')
         return redirect(url_for('index'))
 
-    movies = Movie.query.all()
-    return render_template('index.html', movies=movies)
+    triples = Triple.query.all()
+    return render_template('index.html', triples=triples)
 
 
-@app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
+@app.route('/triple/edit/<int:triple_id>', methods=['GET', 'POST'])
 @login_required
-def edit(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
+def edit(triple_id):
+    triple = Triple.query.get_or_404(triple_id)
 
     if request.method == 'POST':
         entity = request.form['entity']
@@ -42,23 +42,23 @@ def edit(movie_id):
 
         if not entity or not relation or not attribute or len(entity) > 40 or len(relation) > 40 or len(attribute) > 40:
             flash('Invalid input.')
-            return redirect(url_for('edit', movie_id=movie_id))
+            return redirect(url_for('edit', triple_id=triple_id))
 
-        movie.entity = entity
-        movie.relation = relation
-        movie.attribute = attribute
+        triple.entity = entity
+        triple.relation = relation
+        triple.attribute = attribute
         db.session.commit()
         flash('Item updated.')
         return redirect(url_for('index'))
 
-    return render_template('edit.html', movie=movie)
+    return render_template('edit.html', triple=triple)
 
 
-@app.route('/movie/delete/<int:movie_id>', methods=['POST'])
+@app.route('/triple/delete/<int:triple_id>', methods=['POST'])
 @login_required
-def delete(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
-    db.session.delete(movie)
+def delete(triple_id):
+    triple = Triple.query.get_or_404(triple_id)
+    db.session.delete(triple)
     db.session.commit()
     flash('Item deleted.')
     return redirect(url_for('index'))

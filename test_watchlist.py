@@ -2,7 +2,7 @@
 import unittest
 
 from watchlist import app, db
-from watchlist.models import Movie, User
+from watchlist.models import Triple, User
 from watchlist.commands import forge, initdb
 
 
@@ -17,8 +17,8 @@ class WatchlistTestCase(unittest.TestCase):
 
         user = User(name='Test', username='test')
         user.set_password('123')
-        movie = Movie(title='Test Movie Title', year='2019')
-        db.session.add_all([user, movie])
+        triple = Triple(title='Test Movie Title', year='2019')
+        db.session.add_all([user, triple])
         db.session.commit()
 
         self.client = app.test_client()
@@ -146,24 +146,35 @@ class WatchlistTestCase(unittest.TestCase):
         self.login()
 
         response = self.client.post('/', data=dict(
-            title='New Movie',
-            year='2019'
+            entity='New entity',
+            relation='rela',
+            attribute='attr'
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Item created.', data)
-        self.assertIn('New Movie', data)
+        self.assertIn('New entity', data)
 
         response = self.client.post('/', data=dict(
-            title='',
-            year='2019'
+            entity='',
+            relation='rela',
+            attribute='attr'
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Item created.', data)
         self.assertIn('Invalid input.', data)
 
         response = self.client.post('/', data=dict(
-            title='New Movie',
-            year=''
+            entity='New entity',
+            relation='',
+            attribute='attr'
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertNotIn('Item created.', data)
+        self.assertIn('Invalid input.', data)
+        response = self.client.post('/', data=dict(
+            entity='New entity',
+            relation='rela',
+            attribute=''
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Item created.', data)
@@ -172,21 +183,21 @@ class WatchlistTestCase(unittest.TestCase):
     def test_update_item(self):
         self.login()
 
-        response = self.client.get('/movie/edit/1')
+        response = self.client.get('/triple/edit/1')
         data = response.get_data(as_text=True)
         self.assertIn('Edit item', data)
         self.assertIn('Test Movie Title', data)
         self.assertIn('2019', data)
 
-        response = self.client.post('/movie/edit/1', data=dict(
-            title='New Movie Edited',
+        response = self.client.post('/triple/edit/1', data=dict(
+            title='New Entity Edited',
             year='2019'
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Item updated.', data)
         self.assertIn('New Movie Edited', data)
 
-        response = self.client.post('/movie/edit/1', data=dict(
+        response = self.client.post('/triple/edit/1', data=dict(
             title='',
             year='2019'
         ), follow_redirects=True)
@@ -194,7 +205,7 @@ class WatchlistTestCase(unittest.TestCase):
         self.assertNotIn('Item updated.', data)
         self.assertIn('Invalid input.', data)
 
-        response = self.client.post('/movie/edit/1', data=dict(
+        response = self.client.post('/triple/edit/1', data=dict(
             title='New Movie Edited Again',
             year=''
         ), follow_redirects=True)
@@ -206,7 +217,7 @@ class WatchlistTestCase(unittest.TestCase):
     def test_delete_item(self):
         self.login()
 
-        response = self.client.post('/movie/delete/1', follow_redirects=True)
+        response = self.client.post('/triple/delete/1', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Item deleted.', data)
         self.assertNotIn('Test Movie Title', data)

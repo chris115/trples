@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
 
-class Movie(db.Model):
+class Triple(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     entity = db.Column(db.String(40))
     relation = db.Column(db.String(40))

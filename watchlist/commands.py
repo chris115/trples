@@ -2,7 +2,7 @@
 import click
 
 from watchlist import app, db
-from watchlist.models import User, Movie
+from watchlist.models import User, Triple
 
 
 @app.cli.command()
@@ -21,24 +21,25 @@ def forge():
     db.create_all()
 
     name = 'Chris'
-    movies = [
-        {'entity': 'Material Resource', 'relation': 'has', 'attribute': 'Workpiece'},
-        # {'title': 'Dead Poets Society', 'year': '1989'},
-        # {'title': 'A Perfect World', 'year': '1993'},
-        # {'title': 'Leon', 'year': '1994'},
-        # {'title': 'Mahjong', 'year': '1996'},
-        # {'title': 'Swallowtail Butterfly', 'year': '1996'},
-        # {'title': 'King of Comedy', 'year': '1999'},
-        # {'title': 'Devils on the Doorstep', 'year': '1999'},
-        # {'title': 'WALL-E', 'year': '2008'},
-        # {'title': 'The Pork of Music', 'year': '2012'},
+    triples = [
+        {'entity': 'Material Resource', 'relation': 'has subclass', 'attribute': 'Workpiece'},
+        {'entity': 'Equipment Resource', 'relation': 'has subclass', 'attribute': 'Processing Equipment'},
+        {'entity': '设备资源', 'relation': '包含', 'attribute': '仪器仪表'},
+        {'entity': '刀具', 'relation': '包含', 'attribute': '铣刀'},
+        {'entity': '夹具', 'relation': '包含', 'attribute': '通用夹具'},
+        {'entity': '刀具', 'relation': '属于', 'attribute': '消耗性资源'},
+        {'entity': '人力资源', 'relation': '包含', 'attribute': '一线人员'},
+        {'entity': 'Machining Staff', 'relation': 'is a', 'attribute': 'Frontline Staff'},
+        {'entity': 'ERP', 'relation': 'is a', 'attribute': 'Application System Resource'},
+        {'entity': 'TRIZ', 'relation': '属于', 'attribute': '创新方法'},
+
     ]
 
     user = User(name=name)
     db.session.add(user)
-    for m in movies:
-        movie = Movie(entity=m['entity'], relation=m['relation'], attribute=m['attribute'])
-        db.session.add(movie)
+    for m in triples:
+        triple = Triple(entity=m['entity'], relation=m['relation'], attribute=m['attribute'])
+        db.session.add(triple)
 
     db.session.commit()
     click.echo('Done.')
