@@ -2,7 +2,7 @@
 
 Example application for flask tutorial "[Flask 入门教程](http://helloflask.com/tutorial)".
 
-Demo: http://watchlist.helloflask.com
+
 
 ![Screenshot](https://github.com/chris115/trples/blob/master/index%20picture.png)
 
